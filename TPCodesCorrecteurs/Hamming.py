@@ -7,13 +7,12 @@ def generate_matrix_h(n):
     matrix_identity = np.identity(n) # sert à générer la matrice I
     combinaisons = [list(i) for i in itertools.product([0, 1], repeat=n)] # créer toutes les combinaisons de 0/1 de taille n
     matrix_combinaisons = np.array(combinaisons) # permet de transformer la liste générée en matrice
-    i = 0
     index = []
-    # Retirer les doublons pour l = 3
-    for value in matrix_combinaisons:
-        if str(value) == "[0 0 0]" or str(value) == "[1 0 0]" or str(value) == "[0 1 0]" or str(value) == "[0 0 1]":
-            index.append(i)
-        i += 1
+    # Retirer les doublons
+    for value in range(0, len(matrix_combinaisons)):
+        for i in range(0, len(matrix_identity)):
+            if str(matrix_combinaisons[value]) == str(matrix_identity[i]):
+                index.append(value)
     matrix_h = np.delete(matrix_combinaisons, index, axis=0)
     matrix_h = np.append(matrix_h, matrix_identity, axis=0) # fusion des deux matrices (conacténation)
     matrix_h = matrix_h.T
