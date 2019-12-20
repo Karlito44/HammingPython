@@ -7,14 +7,20 @@ def generate_matrix_h(n):
     matrix_identity = np.identity(n) # sert à générer la matrice I
     combinaisons = [list(i) for i in itertools.product([0, 1], repeat=n)] # créer toutes les combinaisons de 0/1 de taille n
     matrix_combinaisons = np.array(combinaisons) # permet de transformer la liste générée en matrice
-    index = []
+    matrix_combinaisons = np.append(matrix_combinaisons, matrix_identity, axis=0)
+    # Permet d'obtenir un objet de type matrix pour ensuite poursuivre le traitement
+    indexToRemove = []
+    for i in range(len(matrix_combinaisons) - len(matrix_identity), len(matrix_combinaisons)):
+        indexToRemove.append(i)
+    matrix_combinaisons = np.delete(matrix_combinaisons, indexToRemove, axis=0)
+    index = [0]
     # Retirer les doublons
-    for value in range(0, len(matrix_combinaisons)):
-        for i in range(0, len(matrix_identity)):
-            if str(matrix_combinaisons[value]) == str(matrix_identity[i]):
-                index.append(value)
+    for i in range(0, len(matrix_combinaisons)):
+        for y in range(0, len(matrix_identity)):
+            if str(matrix_combinaisons[i]) == str(matrix_identity[y]):
+                index.append(i)
     matrix_h = np.delete(matrix_combinaisons, index, axis=0)
-    matrix_h = np.append(matrix_h, matrix_identity, axis=0) # fusion des deux matrices (conacténation)
+    matrix_h = np.append(matrix_h, matrix_identity, axis=0) # fusion des deux matrices (concaténation)
     matrix_h = matrix_h.T
     return matrix_h
 
@@ -137,6 +143,12 @@ if __name__ == "__main__":
     print(matrice)
     print("Choisissez un mot à encoder: ")
     mot = input()
+    while True:
+        if len(mot) != len(matrice):
+            print("Ressaisissez (taille du mot = ",len(matrice),"): ")
+            mot = input()
+        else:
+            break
     print("Mot après encodage: ")
     motEncode = encode(mot, matrice)
     print(motEncode)
@@ -150,4 +162,5 @@ if __name__ == "__main__":
     print()
     print("Hachage et correction du mot 1011101100011000110011111010001110000111011011111: ")
     print(hachage("1011101100011000110011111010001110000111011011111", n, matriceH))
+    input('Press ENTER to exit')
 
